@@ -4,7 +4,7 @@
 
 set terminal png
 set output "RDF.png"
-set size 1, 0.5
+set size 1, 1
 
 
 set origin 0.0,0.0
