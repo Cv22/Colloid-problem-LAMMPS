@@ -1,0 +1,163 @@
+LAMMPS (29 Oct 2020)
+# Big colloid particles and small LJ particles
+
+units		lj
+atom_style	sphere
+dimension	2
+
+lattice		sq 0.01
+Lattice spacing in x,y,z = 10.000000 10.000000 10.000000
+region		box block 0 30 0 30 -0.5 0.5
+create_box	2 box
+Created orthogonal box = (0.0000000 0.0000000 -5.0000000) to (300.00000 300.00000 5.0000000)
+  1 by 1 by 1 MPI processor grid
+create_atoms	1 box
+Created 900 atoms
+  create_atoms CPU = 0.001 seconds
+
+set		group all type/fraction 2 0.96 23984
+Setting atom values ...
+  861 settings made for type/fraction
+
+set		type 1 mass 9
+Setting atom values ...
+  39 settings made for mass
+set		type 2 mass 1
+Setting atom values ...
+  861 settings made for mass
+
+velocity	all create 1.44 87287 loop geom
+
+# multi neighbor and comm for efficiency
+
+neighbor	1 multi
+neigh_modify	delay 0
+comm_modify     mode multi
+
+# colloid potential
+
+pair_style	colloid 12.5
+pair_coeff	1 1  1.0 1.0 5.0 5.0 12.5
+pair_coeff	1 2  5.0 1.0 5.0 0.0 7.0
+pair_coeff	2 2 10.0 1.0 0.0 0.0 2.5
+
+fix		1 all npt temp 2.0 2.0 1.0 iso 0.0 1.0 10.0 drag 1.0 	        mtk no pchain 0 tchain 1
+fix		2 all enforce2d
+
+dump		1 all atom 1000 dump.colloid
+
+compute 	myRDF all rdf 1000
+#
+fix		rdf all ave/time 1000 1 1000 c_myRDF[*] file tmp.rdf mode vector
+#dump		2 all image 1000 image.*.jpg type type #		zoom 1.5 center d 0.5 0.5 0.5
+#dump_modify	2 pad 5 adiam 1 5.0 adiam 2 1.5
+
+#dump		3 all movie 1000 movie.mpg type type #		zoom 1.5 center d 0.5 0.5 0.5
+#dump_modify	3 pad 5 adiam 1 5.0 adiam 2 1.5
+
+thermo_style	custom step temp epair etotal press vol
+thermo		1000
+
+timestep	0.005
+
+run		50000
+Neighbor list info ...
+  update every 1 steps, delay 0 steps, check yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 13.5
+  ghost atom cutoff = 13.5
+  binsize = 1.75, bins = 172 172 6
+  2 neighbor lists, perpetual/occasional/extra = 1 1 0
+  (1) pair colloid, perpetual
+      attributes: half, newton on
+      pair build: half/multi/newton
+      stencil: half/multi/2d/newton
+      bin: standard
+  (2) compute rdf, occasional, copy from (1)
+      attributes: half, newton on
+      pair build: copy
+      stencil: none
+      bin: none
+Per MPI rank memory allocation (min/avg/max) = 5.862 | 5.862 | 5.862 Mbytes
+Step Temp E_pair TotEng Press Volume 
+       0         1.44 -2.2136534e-06    1.4383978  0.014383923        90000 
+    1000    1.9572809 -0.00036743274    1.9547388  0.017982269    98935.161 
+    2000     2.068567 -0.0010518227    2.0652168  0.019466739    96307.439 
+    3000    2.1787472 0.0045846363     2.180911  0.029249545     68560.31 
+    4000    2.1979309 0.0017234058    2.1972121  0.048831814    42699.657 
+    5000    2.1541368 0.0068842503    2.1586276   0.07471981    28571.492 
+    6000     2.111318 0.0024189699    2.1113911  0.091799665     21611.61 
+    7000     2.078952 0.0060036925    2.0826458    0.1163485    17868.764 
+    8000    2.0644858 0.0046356539    2.0668276   0.12915961     15516.79 
+    9000    2.0550606 0.0061855134    2.0589627   0.14904895    13860.769 
+   10000    2.0330017  0.025290725    2.0560335   0.17633992     12549.63 
+   11000    2.0375798  0.019721674    2.0550375   0.21088857    11447.056 
+   12000    2.0441411  0.015774575    2.0576444   0.21642751     10486.01 
+   13000    2.0450352  0.012187773    2.0549507   0.22801307    9736.5468 
+   14000    2.0310192  0.017214942    2.0459775   0.26631268      9155.57 
+   15000    2.0372941  0.013988097    2.0490185   0.26904975    8593.0723 
+   16000    2.0317823  0.024301045    2.0538258   0.32296842    8105.8641 
+   17000    2.0404395  0.014004183    2.0521765   0.28844629    7693.8625 
+   18000    2.0253783  0.026482368    2.0496103   0.33892867    7337.2926 
+   19000    1.9993858  0.054582837    2.0517471   0.37056996    7021.9563 
+   20000    2.0250976  0.025553447    2.0484009   0.38595959    6776.6695 
+   21000    2.0110196  0.048246457    2.0570316   0.46314066    6520.9712 
+   22000    2.0012178  0.051450005    2.0504442   0.50011911     6286.566 
+   23000    2.0226109  0.031787722    2.0521512   0.43613089    6119.8217 
+   24000    2.0134913  0.042411775    2.0536659    0.4577662    5943.5984 
+   25000    2.0093422  0.051178345    2.0582879   0.48096234    5761.3544 
+   26000    2.0248309  0.032810165    2.0553913   0.50986378    5597.7711 
+   27000    2.0434002  0.023550572    2.0646803   0.50645895     5412.714 
+   28000     2.016281  0.044759023    2.0587997    0.5280788    5286.4223 
+   29000    2.0077475    0.0601743    2.0656909   0.57877433    5141.1547 
+   30000    2.0020028  0.057996828    2.0577752   0.58202549    5051.5118 
+   31000    2.0272724  0.036923011    2.0619429   0.57737892    4951.4005 
+   32000    1.9961882  0.072148507    2.0661187   0.66956459    4853.7897 
+   33000    2.0195419  0.048574609    2.0658725   0.59963748    4785.5398 
+   34000    1.9847192   0.08791774    2.0704317   0.67472077    4692.0829 
+   35000    2.0232089   0.05359142    2.0745523   0.70512517    4591.1869 
+   36000    2.0132717  0.064582747    2.0756175   0.64191182    4513.5395 
+   37000    2.0099041  0.062627912    2.0702987   0.68667086    4435.1025 
+   38000    2.0052872  0.075715262    2.0787744   0.82912244    4344.0961 
+   39000     1.996695  0.079486362    2.0739628   0.80007632    4274.6786 
+   40000    2.0287984  0.049071765     2.075616   0.68699011    4205.1065 
+   41000    1.9991681  0.079251544    2.0761983   0.76990476    4167.3826 
+   42000    2.0052219  0.078415454    2.0814093    0.8006196     4115.727 
+   43000    1.9969265  0.085572469    2.0802802   0.82495686    4070.1484 
+   44000    2.0220264  0.067086318     2.086866   0.83855059    4022.2122 
+   45000     2.042858  0.049644184    2.0902324   0.81644527    3951.1191 
+   46000    1.9826432   0.10101728    2.0814575   0.90870473    3933.6594 
+   47000     2.006566  0.085716015    2.0900525   0.90397394    3891.4349 
+   48000    2.0040466  0.090560783    2.0923807   0.99847747    3834.7163 
+   49000    2.0220363  0.081815852    2.1016054   0.94394569    3797.9118 
+   50000    2.0137006  0.085147019    2.0966102    1.0177029     3745.546 
+Loop time of 7.05005 on 1 procs for 50000 steps with 900 atoms
+
+Performance: 3063808.883 tau/day, 7092.150 timesteps/s
+100.0% CPU use with 1 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 3.3345     | 3.3345     | 3.3345     |   0.0 | 47.30
+Neigh   | 1.1742     | 1.1742     | 1.1742     |   0.0 | 16.65
+Comm    | 0.3436     | 0.3436     | 0.3436     |   0.0 |  4.87
+Output  | 0.033673   | 0.033673   | 0.033673   |   0.0 |  0.48
+Modify  | 1.8896     | 1.8896     | 1.8896     |   0.0 | 26.80
+Other   |            | 0.2745     |            |       |  3.89
+
+Nlocal:        900.000 ave         900 max         900 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:        512.000 ave         512 max         512 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:        5969.00 ave        5969 max        5969 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 5969
+Ave neighs/atom = 6.6322222
+Neighbor list builds = 3145
+Dangerous builds = 0
+
+Please see the log.cite file for references relevant to this simulation
+
+Total wall time: 0:00:07
