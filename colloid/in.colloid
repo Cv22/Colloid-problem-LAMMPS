@@ -35,6 +35,9 @@ fix		2 all enforce2d
 
 dump		1 all atom 1000 dump.colloid
 
+compute 	myRDF all rdf 1000
+#
+fix		rdf all ave/time 1000 1 1000 c_myRDF[*] file tmp.rdf mode vector
 #dump		2 all image 1000 image.*.jpg type type &
 #		zoom 1.5 center d 0.5 0.5 0.5
 #dump_modify	2 pad 5 adiam 1 5.0 adiam 2 1.5
