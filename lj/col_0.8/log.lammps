@@ -131,20 +131,20 @@ Step Temp E_pair TotEng Press Volume
    48000    2.0031127   0.14397048    2.1448575    1.0836885    7609.8507 
    49000    2.0063272   0.10836791    2.1124659   0.86960301    7607.1057 
    50000    2.0295121   0.12187267    2.1491298   0.97046289    7497.4058 
-Loop time of 10.47 on 1 procs for 50000 steps with 900 atoms
+Loop time of 10.4286 on 1 procs for 50000 steps with 900 atoms
 
-Performance: 2063038.771 tau/day, 4775.553 timesteps/s
-100.0% CPU use with 1 MPI tasks x no OpenMP threads
+Performance: 2071232.403 tau/day, 4794.519 timesteps/s
+99.8% CPU use with 1 MPI tasks x no OpenMP threads
 
 MPI task timing breakdown:
 Section |  min time  |  avg time  |  max time  |%varavg| %total
 ---------------------------------------------------------------
-Pair    | 6.8246     | 6.8246     | 6.8246     |   0.0 | 65.18
-Neigh   | 1.1192     | 1.1192     | 1.1192     |   0.0 | 10.69
-Comm    | 0.29434    | 0.29434    | 0.29434    |   0.0 |  2.81
-Output  | 0.033674   | 0.033674   | 0.033674   |   0.0 |  0.32
-Modify  | 1.9287     | 1.9287     | 1.9287     |   0.0 | 18.42
-Other   |            | 0.2696     |            |       |  2.57
+Pair    | 6.7727     | 6.7727     | 6.7727     |   0.0 | 64.94
+Neigh   | 1.1146     | 1.1146     | 1.1146     |   0.0 | 10.69
+Comm    | 0.29217    | 0.29217    | 0.29217    |   0.0 |  2.80
+Output  | 0.033627   | 0.033627   | 0.033627   |   0.0 |  0.32
+Modify  | 1.9397     | 1.9397     | 1.9397     |   0.0 | 18.60
+Other   |            | 0.2758     |            |       |  2.64
 
 Nlocal:        900.000 ave         900 max         900 min
 Histogram: 1 0 0 0 0 0 0 0 0 0
